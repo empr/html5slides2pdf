@@ -1,0 +1,19 @@
+# -*- encoding: utf-8 -*-
+require File.expand_path('../lib/html5slides2pdf/version', __FILE__)
+
+Gem::Specification.new do |gem|
+  gem.authors       = ["empr"]
+  gem.email         = ["highlow256@gmail.com"]
+  gem.description   = %q{Convert html5slides to pdf}
+  gem.summary       = %q{Convert html5slides to pdf}
+  gem.homepage      = ""
+
+  gem.files         = `git ls-files`.split($\)
+  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.name          = "html5slides2pdf"
+  gem.require_paths = ["lib"]
+  gem.version       = Html5slides2pdf::VERSION
+
+  gem.add_dependency 'nokogiri'
+end

@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'html5slides2pdf'
+
+Html5slides2pdf.new.convert ARGV[0]
+
