@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'nokogiri'
+require 'fileutils'
 require 'html5slides2pdf/version'
 
 class Html5slides2pdfError < StandardError; end
@@ -28,6 +29,7 @@ class Html5slides2pdf
       raise Html5slides2pdfError, 'not html5slides'
     end
     Dir.mkdir(@work_dir) unless File.exists?(@work_dir)
+    preprocess_for_image(url, doc)
     htmls = make_html_per_page(doc)
     make_pdf(doc, htmls)
   end
@@ -39,6 +41,29 @@ class Html5slides2pdf
       e[:src] && File.basename(e[:src]) == 'slides.js'
     }
     (section_tag && article_tag && slides_js) ? true : false
+  end
+
+  def preprocess_for_image(url, doc)
+    doc.search('img').each {|e|
+      src = URI.parse(e[:src])
+      if src.relative?
+        from = URI.join(url, src).to_s
+        to = '%s/%s' % [@work_dir, src]
+      else
+        from = src.to_s
+        to = '%s/%s' % [@work_dir, s - url]
+      end
+      FileUtils.mkdir_p(File.dirname(to))
+      download_image(from, to)
+    }
+  end
+
+  def download_image(from, to)
+    open(to, 'wb') {|w|
+      open(from) {|r|
+        w.write(r.read)
+      }
+    }
   end
 
   def make_html_per_page(doc)
