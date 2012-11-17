@@ -1,7 +1,6 @@
 require 'open-uri'
 require 'nokogiri'
 require 'html5slides2pdf/version'
-require 'html5slides2pdf/template'
 
 class Html5slides2pdfError < StandardError; end
 
@@ -45,12 +44,37 @@ class Html5slides2pdf
   def make_html_per_page(doc)
     files = []
     doc.search('article').each_with_index {|article, i|
-      html = TEMPLATE % {:article => article}
+      html = template % {:article => article}
       filename = '%s/%s.html' % [@work_dir, i]
       open(filename, 'w') {|f| f.write(html) }
       files << filename
     }
     files
+  end
+
+  def template
+    css = load_css.gsub(/%/, '%%')
+    <<-EOS
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+#{css}
+</style>
+</head>
+<body>
+%<article>s
+</body>
+</html>
+    EOS
+  end
+
+  def load_css
+    path = File.join(File.dirname(File.expand_path(__FILE__)), 'styles.css')
+    File.readlines(path).reject {|line|
+      line.index('letter-spacing')
+    }.join
   end
 
   def make_pdf(doc, htmls)
