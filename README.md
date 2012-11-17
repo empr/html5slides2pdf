@@ -1,24 +1,14 @@
 # Html5slides2pdf
 
-TODO: Write a gem description
+Convert html5slides to pdf.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'html5slides2pdf'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install html5slides2pdf
+TODO:
 
 ## Usage
 
-TODO: Write usage instructions here
+    $ html5slides2pdf <URL>
 
 ## Contributing
 
